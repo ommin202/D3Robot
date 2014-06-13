@@ -1,0 +1,56 @@
+
+        
+        
+        
+    </head>
+    <body>
+        <div> 
+        offhand damage display is wrong on official battle.net site - add an option to over-write (subtract old numbers and add manual ones)
+        FIXED currently no api functionality for getting paragon levels - could add buttons at bottom, find paragon points and display
+        FIXED might not work for unfinished characters, i.e. must have equipment in all slots
+        .5FIXED only show first n characters cause too lazy to rotate - one less character and arrow slots, increasing index?
+        .5FIXED main skills must be in the rightclick slot to be properly calculated - change to a dropdown/select list?
+            now selects properly but possibly give dropdown/select list.
+        FIXED set bonuses don't appear in the table, could add a note about the maybe.
+        .5FIXED? parsetext primary has code "for gems" for dealing with gems. may need to go in other slots too (ie if a weapon has base crit damage PLUS a gem)
+        FIXED dualweilding attack speed bonus..? never really a problem.
+        
+        Contribute? dps with item and dps without item, find difference. 150 dps to 100 dps, (x-y)/x.
+        switch cold and elite in table?
+        not exactly a dps calculator, its a damage per cast calculator. dps is not a useful thing to know, but dpm or dprotation would be.
+        
+        
+        <p>6 - The Base number in the following table is what you will likely see in-game. If not, it could be an issue with 
+            offhand damage or paragon points spent incorrectly. Doing so will get you closest to the optimal 10:1 balance.</p>
+        <p>7 - Attempts to find "Secondary" skill. If none, attempts to use skill in right mouse button slot. </p>
+        
+        <p>All tables assume any active skill bonuses are on (i.e. Magic Weapon for Wizards) </p>
+        <p>All tables are consecutive: they include the data from the previous sections/tables.</p>
+        <p>Occasionally the tooltips will display incorrect items, the data gathered is still correct. Reload if it bothers you. </p>
+        <p>Passives are tough, weapon damage per second is strange to include, some require perfect timing and situations, some are estimates based on cooldowns..
+        </p>
+        
+        new patch 2.0.5!
+        akarats champion/rally change! fervor change!
+        
+        
+        Thanks:
+        http://diablo.somepage.com/ for work with builds/passives... they are hard to do right.
+        maxstats?
+        the tooltip js?
+        http://sirius-sdz.deviantart.com/art/Texture-560-452388239
+        http://www.bestcssbuttongenerator.com/#/zR8uusexhJ
+        
+        
+        Version 1.1 plans: 
+            calculate max resource to provide a DProtation and DPminute value.
+            item suggestions
+            reroll suggestions
+        
+        
+        </div>
+       
+    </body>
+</html>
+
+

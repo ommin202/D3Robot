@@ -1,0 +1,548 @@
+/* 
+    Document   : style
+    Created on : 9-Apr-2014, 11:50:31 AM
+    Author     : Colton Hornstein
+    Description:
+        Stylesheet for the main page of D3 Robot
+        
+    Colors: 
+        #f3e6d0 - tan
+        #fa761e - orange
+        #2e2015 - background brown
+*/
+
+
+
+html {
+    background: black; /*default, should never show hopefully*/
+    background: url("../img/bg.jpg");
+    background-size: 50%;
+    /*background-position:center top;*/ 
+    
+    /*from d3 official site*/
+    color: #F3E6D0;
+    font-family: Palatino Linotype;
+}
+
+body {
+    /*from d3 official site*/
+    font-size: 20px;
+    line-height: 21px;  
+}
+
+#wrapper {
+    width: 1000px;
+    margin: 0 auto; /*center everything on page*/
+}
+
+#banner {
+    width: 1000px;
+    padding-bottom: 10px;
+}
+
+#logo  {
+    /*where the logo is*/
+    width: 344px; /*width of img in photoshop*/
+    margin-left: 328px; /*center logo in wrapper, (1000-344)/2*/
+    display: inline-block;
+}
+
+#login { 
+    width: 100px;
+    height: 100px;
+    float: right;
+    margin-top: 20px;
+    line-height: 30px;
+}
+
+
+#content {
+    border-style: solid;
+    border-width: 1px;
+    border-color: #fa761e;
+    padding: 10px;
+    background-color: #2e2015; /*46, 32, 21 as rgb, this line doesnt do anything anymore*/
+    background:rgba(46,32,21,0.95);
+}
+
+#footer {
+    margin: 0 auto;
+    padding: 0px;
+    width: 978px;
+    height: 80px;
+    padding-top: 30px;   
+    font-size: 12px;
+    /*style: clear:both;*/
+}
+
+#notes {
+    margin: 0 auto;
+    padding: 0px;
+    width: 978px;
+    /*height: 80px;*/
+    line-height: 1px;
+    padding-top: 20px;   
+    font-size: 12px;
+}
+
+#notes h2 {
+    margin-bottom: 10px;
+}
+
+#footlinks a {
+    padding: 37px;
+    font-size: 14px;
+}
+
+#copyright {
+    text-align: center;
+}
+
+#copyright a:link, a:visited {
+    color: #fa761e;
+}
+
+#copyright a:hover {
+    color: white;
+}
+
+#discleft {
+    float: left;
+    width: 300px;
+}
+
+#discright {
+    float: right;
+    width: 300px;
+}
+
+#footcenter {
+    width: 350px;
+    display: inline-block;
+}
+
+#profileform {
+    margin: 0px auto;
+    width: 580px;
+    padding: 0;  
+}
+
+#load {
+    display: inline;   
+}
+
+ #load option {
+     width: 70px; /*width of the dropdown bars*/
+ }
+ 
+ #load select {
+     margin-right: 20px;
+ }
+ 
+ #code {
+     width: 50px;
+ }
+
+    a:link, a:visited {
+    font-weight: bold;
+    text-decoration: none;
+    color: #fa761e;
+ } 
+
+    a:hover {
+    font-weight: bold;
+    text-decoration: none;
+    color:  #faf4e1;
+ } 
+
+#output{
+     clear:both;
+     text-align:center;
+ }
+ #outputact { 
+    width:33%;
+    float:left;
+    display:inline;
+ } 
+ #outputrune {
+    width: 33%;
+    float: left; /*little odd being here, but fixes things if one of the other categories is missing.*/
+    display:inline-block;
+ }
+ #outputpass {
+    width: 33%;
+    float:right;
+    display: inline;
+ }
+ 
+#charboxes {
+    padding-top: 10px;  
+    padding-bottom: 10px;
+    height: 70px;
+}
+ 
+.charbox {
+     visibility: hidden; /*hide all boxes to start*/
+     vertical-align: top; /*keeps boxes from being shifted by append*/
+     border-style: solid;
+     border-color: #fa761e; /*was 000*/
+     border-width: 1px;
+    border-radius: 10px;
+     width: 66px; /*sb both 66*/
+     height: 66px;
+     display: inline-block;
+     margin: 0 18px;
+ }
+ 
+ .charbox img {
+     
+   border-radius: 10px; /*makes images circular, above border-radius makes the border circular*/
+ }
+ 
+#host {
+    /*height: 20px;*/
+    /* background-color: red;*/
+}
+ 
+#herotable {
+     /*visibility: hidden; /*hide this to start, later 
+     height: somethingpx; */
+     width: 100%;
+     border: 1px solid #fa761e;
+     text-align: center;
+     border-collapse: collapse;
+     margin: 10px 0;
+ }
+#herotable th {
+     border: 1px solid orange; /*nothing ? */
+ }
+ 
+#herotable td {
+     width: 11%; /*squishy*/
+ }
+ 
+.dps {
+     width: 80%;
+     border: 1px solid #fa761e;
+     text-align: center;
+     border-collapse: collapse;
+     margin: 10px auto; 
+ }
+ 
+.dps td {
+     width: 25%;
+ }
+ 
+ #tablesummary {
+     width: 80%;
+     border: 1px solid #fa761e;
+     text-align: center;
+     border-collapse: collapse;
+     margin: 10px auto; 
+ }
+ 
+ #summarytable td {
+     width: 25%;
+ }
+ 
+#tableequivs td {
+     width: 12%;
+ }
+ 
+h2 {
+font-size: 20px;
+color: white; 
+text-transform: uppercase;
+text-align: center;
+/*text-decoration: underline;*/
+} 
+
+#row_totals {
+    border-top: 1px solid #fa761e;
+    color: white;
+    font-weight: bold;
+    background: #1c140d;
+}
+
+#row_totals > td, #row_header > td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+#row_totals > td:first-child{
+    /*TODO cant get margin/padding to work, but this is the right stuff for selecting just "total"*/
+}
+
+#row_header {
+    border-bottom: 1px solid #fa761e;
+    color: white;
+    font-weight: bold;
+    background: #1c140d;
+}
+
+#herotable a:hover {
+    font-weight: bold;
+    text-decoration: none;
+    color:  #faf4e1;
+}
+
+#herotable a {
+    font-weight: bold;
+    text-decoration: none;
+    /*color:  #faf4e1;*/
+}
+
+#suggester {
+    padding: 20px 20px 0;
+}
+
+#skillspecific {
+    padding: 15px 15px 0;
+}
+
+#equivs {
+    padding: 20px 20px 0;
+}
+
+.button {
+  padding:5px;
+  background-color: black;
+  border: 1px solid #fa761e; /*orange*/
+  text-decoration:none;
+  font-weight: bold;
+  color: #F3E6D0;
+  font-family: Palatino Linotype;
+  font-size: 15px;
+  
+  
+	-moz-box-shadow:inset 0px 1px 0px 0px #cf866c;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #cf866c;
+	box-shadow:inset 0px 1px 0px 0px #cf866c;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #fa761e), color-stop(1, #d35f12));
+	background:-moz-linear-gradient(top, #fa761e 5%, #d35f12 100%);
+	background:-webkit-linear-gradient(top, #fa761e 5%, #d35f12 100%);
+	background:-o-linear-gradient(top, #fa761e 5%, #d35f12 100%);
+	background:-ms-linear-gradient(top, #fa761e 5%, #d35f12 100%);
+	background:linear-gradient(to bottom, #fa761e 5%, #d35f12 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fa761e', endColorstr='#d35f12',GradientType=0);
+	background-color:#fa761e;
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+	border:1px solid #942911;
+	display:inline-block;
+	cursor:pointer;
+	/*color:#ffffff;
+	font-family:arial;
+	font-size:13px;
+	padding:6px 24px;*/
+	text-decoration:none;
+	text-shadow:0px 1px 0px #854629;
+  
+}
+
+.button:hover {
+    border-color: #faf4e1; /*beige*/
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #d35f12), color-stop(1, #fa761e));
+	background:-moz-linear-gradient(top, #d35f12 5%, #fa761e 100%);
+	background:-webkit-linear-gradient(top, #d35f12 5%, #fa761e 100%);
+	background:-o-linear-gradient(top, #d35f12 5%, #fa761e 100%);
+	background:-ms-linear-gradient(top, #d35f12 5%, #fa761e 100%);
+	background:linear-gradient(to bottom, #d35f12 5%, #fa761e 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#d35f12', endColorstr='#fa761e',GradientType=0);
+	background-color:#d35f12;
+}
+
+/*replace d04 with fa761e
+and bc3 with d35f12*/
+
+
+.answer {
+    margin-bottom: 20px;
+    color: #f3e6d0;
+}
+
+.question {
+    color: #d35f12;
+    margin: 5px 0;
+}
+
+#offhand {
+    font-size: 12px;
+    font-style: italic;
+    margin-top: -20px;
+}
+
+#clearable {
+    visibility: hidden;
+}
+
+h3 {
+    font-size: 20px;
+    color: #fa761e; 
+    text-transform: uppercase;
+    padding-top: 5px;
+    text-align: center;
+ }
+
+
+
+ 
+/***All below taken from ch.com 2014**************************************************************/ 
+
+h1, h2, h3, h4, h5, h6 {
+    margin:0px; 
+    padding:0px
+}
+a {
+    outline:0px; 
+    border:0px
+}
+p {
+    cursor: default;
+}
+
+
+#links{
+width: 60%; 
+float: right;
+position: relative;
+margin: 0;
+padding: 0;
+    } 
+    
+
+
+/**************************************************new 2014*******************************************************/
+* {
+	padding: 0;
+	margin: 0;
+ }
+
+#holder {
+
+font-family: 'PT Sans', sans-serif;
+ }
+
+
+
+
+
+ 
+h4 {
+font-size: 12px;
+color: #45abbd; 
+text-transform: uppercase;
+margin-bottom: -10px;
+margin-top: 10px;
+letter-spacing: 1px;
+ } 
+
+h4.first {
+margin-top: 30px;
+ } 
+ 
+p {
+padding: 10px 0;
+ }
+ 
+#headerholder {
+padding: 20px;
+width: 80%;
+margin: 0 auto;
+font-size: 30px;
+color: #082d56;
+ } 
+
+
+  
+#divider {
+width: 800px;
+margin: 30px auto;
+ }  
+ 
+#thirdholder{
+margin-top: 10px;
+margin-bottom: 10px;
+ } 
+ 
+#oneofthree{
+width:30%;
+height: 100px;
+float: left;
+display: inline-block;
+/*background-color:blue;*/
+ } 
+ 
+#twoofthree{
+width:30%;
+height: 100px;
+margin: 0 45px;
+display: inline-block;
+/*background-color:red;*/
+ } 
+ 
+#threeofthree{
+width:30%;
+height: 100px;
+float: right;
+display: inline-block;
+/*background-color:green;*/
+ } 
+
+#sevenwide {
+display: inline-block;
+width: 900px;
+height: 100px;
+margin: 20px 0; /*top and bottom*/
+ } 
+ 
+#sevenwide img {
+margin-left: 21px;
+ } 
+ 
+#sevenwide img.last {
+margin-right: 21px;
+ } 
+ 
+#sevenwidehalf {
+display: inline-block;
+width: 900px;
+height: 50px;
+margin: 20px 0; /*top and bottom*/
+ } 
+ 
+#sevenwidehalf img {
+padding-left: 21px;
+ } 
+ 
+#sevenwidehalf img.last {
+padding-right: 21px;
+ } 
+
+
+  
+#socialhold {
+width: 580px; /*60 a width times 10 items plus 40 fudge room*/
+padding-top: 5px;
+margin: 0px auto;
+ }  
+ 
+#socialhold img {
+margin: 0px 20px;
+ }
+ 
+ /************************************************print sheet only****************************************************/
+ 
+#printpage {
+width: 900px;
+margin: 0 auto; 
+ } 
+ 
+form {
+width: 90px;
+margin: 0 auto;
+margin-top: 10px;
+margin-bottom: 10px;
+ } 
+
