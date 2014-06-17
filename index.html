@@ -9,7 +9,8 @@
 
         <script type="text/javascript" src="js/jquery-1.11.0.min.js" ></script>
         <script src="js/tooltips.js" ></script> <!-- edited version of js to display runes -->
-        <script src="http://us.battle.net/d3/static/js/tooltips.js"></script><!-- official d3 tooltips -->
+        <!--<script src="http://us.battle.net/d3/static/js/tooltips.js"></script><!-- official d3 tooltips -->
+        <!-- this script is interfering with the runes tooltip. -->
         <script> /* modifies tooltips.js to provide unique item linking*/
         var b = Bnet.D3.Tooltips;
         b.registerDataOld = b.registerData; //move old data
@@ -24,14 +25,10 @@
                     this.registerDataOld(data); //data is the old data.. 
                 }
             }
-            if(data.params.type === "skill"){
-                var c = document.body.children, s = c[c.length-1].src; //where we get all the children, and the source of the last child
-                if (typeof s !== "undefined"){ //do nothing if undefined
-                    data.params.key=s.substr(0,s.indexOf('?')).substr(s.lastIndexOf('/')+1); //key is the substring from 0th to.. end, generally.
-                    this.registerDataOld(data);
-                }
+            if (data.params.type !== "item"){
+                this.registerDataOld(data); //just put data back to where it was.
             }
-            /*http://eu.battle.net/d3/en/tooltip/rune/serenity/c?format=jsonp*/
+            // <a href="http://us.battle.net/d3/en/class/monk/active/serenity#c">Ascension</a> works!
         };
         </script>
         <script src="js/loading.js" ></script> <!-- my personal js -->
@@ -97,6 +94,9 @@
         <input type="button" class ="button" id="submitprof" value="Load Heroes" />
         </form> 
         </div>
+        
+        
+        
         
         <div id = "charboxes">
             <div class ="charbox" id="cb0"><a><img height ="66"/></a></div> <!-- TODO remove src to speed up -->

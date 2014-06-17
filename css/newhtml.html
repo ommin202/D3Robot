@@ -1,0 +1,167 @@
+//After auto-searching for runes, fix strange ones. after meteor is patch 2.0.5
+        if (typeof mainskillrune !== "undefined"){
+            //TODO Unique skills and runes, if new percent is below old percent because of splitting or something.
+            if (mainskillrune === "Meteor Shower"){ 
+                char.secondary.damage = 228 * 7; //228% times 7 meteors
+                       // console.log(char); 
+            }
+            //BAR
+            if (mainskillrune === "Sidearm"){ 
+                char.secondary.type = "Cold"; 
+            }
+            if (mainskillrune === "Crushing Advance"){ 
+                char.secondary.type = "Cold"; 
+            }
+            if (mainskillrune === "Best Served Cold"){ 
+                char.secondary.type = "Cold"; 
+            }
+            if (mainskillrune === "Hurricane"){ 
+                char.secondary.type = "Cold"; 
+            }
+            if (mainskillrune === "Arreat's Wall"){ 
+                char.secondary.type = "Fire"; 
+            }
+            //CRU
+            /*Akarat's Champion is all kinds of messed up*/
+            if (mainskillrune === "Divine Aegis"){ 
+                char.secondary.type = "Physical"; 
+            }
+            if (mainskillrune === "Annihilate"){ 
+                char.secondary.type = "Fire"; 
+            }
+            if (mainskillrune === "Mine Field"){ 
+                char.secondary.type = "Fire"; 
+            
+            }if (mainskillrune === "Targeted"){ 
+                char.secondary.type = "Holy"; 
+            }
+            if (mainskillrune === "Reciprocate"){ 
+                char.secondary.type = "Fire"; 
+            }
+            if (mainskillrune === "Shattering Explosion"){ 
+                char.secondary.type = "Physical"; 
+            }
+            if (mainskillrune === "Flurry"){ 
+                char.secondary.type = "Holy"; 
+            }
+            if (mainskillrune === "Rapid Descent"){ 
+                char.secondary.type = "Lightning"; 
+            }
+            if (mainskillrune === "Heaven's Tempest"){ 
+                char.secondary.type = "Fire"; 
+            }
+            if (mainskillrune === "Retribution"){ 
+                char.secondary.type = "Holy"; 
+            }
+            if (mainskillrune === "Thou Shalt Not Pass"){ 
+                char.secondary.type = "Lightning"; 
+            }
+            if (mainskillrune === "Hammer of Pursuit"){ 
+                char.secondary.type = "Physical"; 
+            }
+            if (mainskillrune === "Sword of Justice"){ 
+                char.secondary.type = "Physical"; 
+            }
+            if (mainskillrune === "Fury"){ 
+                char.secondary.type = "Lightning"; 
+            }
+            if (mainskillrune === "Retaliate"){ 
+                char.secondary.type = "Holy"; 
+            }
+            if (mainskillrune === "Crumble"){ 
+                char.secondary.type = "Fire"; 
+            }
+            if (mainskillrune === "One on One"){ 
+                char.secondary.type = "Lightning"; 
+            }
+            if (mainskillrune === "Pound"){ 
+                char.secondary.type = "Physical"; 
+            }
+            if (mainskillrune === "Shield Cross"){ 
+                char.secondary.type = "Physical"; 
+            }
+            if (mainskillrune === "Shared Fate"){ 
+                char.secondary.type = "Lightning"; 
+            }
+            if (mainskillrune === "Draw and Quarter"){ 
+                char.secondary.type = "Holy"; 
+            }
+            if (mainskillrune === "Gathering Sweep"){ 
+                char.secondary.type = "Holy"; 
+            }
+            if (mainskillrune === "Shattering Throw"){
+                char.secondary.type = "Holy";
+            }
+            //DH
+            if (mainskillrune === "Devouring Arrow"){ 
+                char.secondary.type = "Cold"; 
+            }
+            //Monk
+            if (mainskillrune === "Rising Tide"){ 
+                char.secondary.type = "Holy"; 
+            }
+            if (mainskillrune === "Keen Eye"){ 
+                char.secondary.type = "Fire"; 
+            }
+            if (mainskillrune === "Strike from Beyond"){ 
+                char.secondary.type = "Cold"; 
+            }
+            if (mainskillrune === "Bounding Light"){ 
+                char.secondary.type = "Holy"; 
+            }
+            if (mainskillrune === "Quickening"){ 
+                char.secondary.type = "Physical"; 
+            }
+            if (mainskillrune === "Inner Storm"){ 
+                char.secondary.type = "Holy"; 
+            }
+            if (mainskillrune === "Explosive Light"){ 
+                char.secondary.type = "Fire"; 
+            } //following rune got a name change too, hmm..
+            if (mainskillrune === "Blinding Light" || mainskillrune === "Numbing Light"){ 
+                char.secondary.type = "Cold"; 
+            }
+            if (mainskillrune === "Wall of Light"){ 
+                char.secondary.type = "Physical"; 
+            }
+            if (mainskillrune === "Blazing Fists"){ 
+                char.secondary.type = "Fire"; 
+            }
+            if (mainskillrune === "Hands of Lightning"){ 
+                char.secondary.type = "Lightning"; 
+            }
+            if (mainskillrune === "Spirited Salvo"){ 
+                char.secondary.type = "Holy"; 
+            }
+            //WD
+            if (mainskillrune === "Leaping Spiders"){ 
+                char.secondary.type = "Poison"; 
+            }
+            if (mainskillrune === "Medusa Spiders"){ 
+                char.secondary.type = "Cold"; 
+            }
+            if (mainskillrune === "Humongoid"){ 
+                char.secondary.type = "Cold"; 
+            }
+            if (mainskillrune === "Bruiser"){ 
+                char.secondary.type = "Fire"; 
+            }
+            if (mainskillrune === "Toad of Hugeness"){ 
+                char.secondary.type = "Poison"; 
+            }
+            if (mainskillrune === "Bogadile"){ 
+                char.secondary.type = "Physical"; 
+            }
+            if (mainskillrune === "Unrelenting Grip"){ 
+                char.secondary.type = "Cold"; 
+            }
+            //WIZ
+            if (mainskillrune === "Arcane Destruction" || mainskillrune === "Combustion"){ 
+                char.secondary.type = "Fire"; 
+            }
+            if (mainskillrune === "Pure Power"){ 
+                char.secondary.type = "Lightning"; 
+            }
+            if (mainskillrune === "Slow Time"){ 
+                char.secondary.type = "Cold"; 
+            }

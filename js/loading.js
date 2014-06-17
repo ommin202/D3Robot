@@ -34,7 +34,8 @@ function loadprofile(host, name, code) //gets the profile json
     clickableheroes = true;
 
     clearoutput();
-    $("#profileform").after('<h2 id = "h2heroes">Heroes<a href="" title ="Only your first 9 Heroes are listed. If you want to view info for other characters move them up the list in-game." onclick="return false;"><sup>*</sup></a></h2>');
+    $("#h2heroes").remove(); //remove old heroes and add a new one, to avoid duplication
+    $("#profileform").after('<h2 id = "h2heroes">Heroes<a href="" title ="Only your first 9 Heroes are listed. If you want to view info for other characters move them up the list in-game." onclick="return false;"><span class = orangestar>&nbsp;</span></a></h2>');
     
     //set all borders to orange (was black at 000) on account switch too!
     $(charboxes).children('div').css("border-color", "#fa761e");
@@ -101,7 +102,8 @@ function loadchar(id)
 {
     clickableheroes = false;
     clearoutput(); 
-    $("#charboxes").after("<h3 id = 'loading'>Loading...</h2>");
+    
+    $("#charboxes").after("<h2 id = 'loading'>Loading...</h2>");
 g_id = id; //make id global, not required?
   
 var offhandmin = 0; 
@@ -158,7 +160,7 @@ window.allraw = {}; //all raw item data is in here
 */
 
 //append the full table to the page
-$("#hero").append('<h2>Items<a href="" title ="The totals for this table contain values from set bonuses and gems, though they aren&#39;t listed individually." onclick="return false;"><sup>*</sup></a></h2><table id ="herotable"><tr id ="row_header"><td>Slot</td><td>Primary</td><td>Elemental</td><td>Elite</td><td>Skill</td><td>Crit Chance</td><td>Crit Damage</td><td>Attack Speed</td><td>Increase<a href="" title ="This column finds the % contribution to your damage from each item, but doesn&#39;t include set bonuses." onclick="return false;"><sup>*</sup></a></td></tr></table>');
+$("#hero").append('<h2>Items<a href="" title ="The totals for this table contain values from set bonuses and gems, though they aren&#39;t listed individually." onclick="return false;"><span class = orangestar>&nbsp;</span></a></h2><table id ="herotable"><tr id ="row_header"><td>Slot</td><td>Primary</td><td>Elemental</td><td>Elite</td><td>Skill</td><td>Crit Chance</td><td>Crit Damage</td><td>Attack Speed</td><td>Increase<a href="" title ="This column finds the % contribution to your damage from each item, but doesn&#39;t include set bonuses." onclick="return false;"><span class = orangestar>&nbsp;</span></a></td></tr></table>');
 //and show base numbers, a few lines below
 
 
@@ -176,8 +178,9 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
 
         total.Primary += primperlevel; //plus base of 7 from before
         $.each(result.skills.active, function(count, field){
+            //NEW method to find all skills
             //create blank array for each skill
-            char[count] = {"name" : 0, "runename" : 0 , "damage" : 0, "type" : 0, "skill" : 0  }; 
+            char[count] = {"name" : 0, "runename" : 0 , "runeletter" : 0, "damage" : 0, "type" : 0, "skill" : 0  }; 
             
             //parse all skills, gen and main will be duplicated.
             if (typeof field.skill !== "undefined"){
@@ -187,10 +190,12 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
             if (typeof field.rune !== "undefined"){
                 parseskill(count, field.rune.description);
                 char[count].runename = field.rune.name; 
+                char[count].runeletter = field.rune.type;
             }
+            fixrune(count);
             
             
-            //regular/old method of finding skills.
+            //REGULAR/old method of finding skills.
             if (typeof field.skill !== "undefined"){
                 if (field.skill.categorySlug === "primary" || field.skill.categorySlug === "secondary") { //generator or spender
                      parseskill(field.skill.categorySlug, field.skill.description); //find element type, percentage
@@ -410,11 +415,16 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
 
 
         //TODO strange passives/skills
+        //commenting out skills that do have an effect but dont show on sheet; are strange.
         //Static array of possible buff names and values for each class
         //possible options are Bonus damage, as decimals. AttackSpeed, (crit)Chance, and (crit)Damage as whole numbers
         wizbonus = {"Active" : {"Magic Weapon" : {"Bonus" : .1}}, 
-                    "Runes" : {"Sparkflint" : {"Bonus" : .1}, "Force Weapon" : {"Bonus" : .1}, "Pinpoint Barrier" : {"Chance" : 5}, "Deep Freeze" : {"Chance" : 10}, "Time Warp" : {"Bonus" : .1}, "Stretch Time" : {"AttackSpeed" : 10}}, //FW is .2, addtl bonus portion is only .1
-                    "Passive" : {"Glass Cannon" : {"Bonus": .15}, "Conflagration" : {"Chance" : 6}, "Cold Blooded" : {"Bonus" : .1}, "Audacity" : {"Bonus" : .15}, "Elemental Exposure" : {"Bonus" : .2}, "Unwavering Will" : {"Bonus" : .1}}
+                    "Runes" : {"Sparkflint" : {"Bonus" : .1}, "Force Weapon" : {"Bonus" : .1}, "Pinpoint Barrier" : {"Chance" : 5}, 
+                        //"Deep Freeze" : {"Chance" : 10}, "Time Warp" : {"Bonus" : .1}, "Stretch Time" : {"AttackSpeed" : 10}
+                    }, //FW is .2, addtl bonus portion is only .1
+                    "Passive" : {"Glass Cannon" : {"Bonus": .15}, //"Conflagration" : {"Chance" : 6},  //conflagration shouldn't count, as shouldn't some others..
+                                //"Cold Blooded" : {"Bonus" : .1}, "Audacity" : {"Bonus" : .15}, "Elemental Exposure" : {"Bonus" : .2}, 
+                                "Unwavering Will" : {"Bonus" : .1}}
         }; 
         witbonus = {"Active" : {"Big Bad Voodoo" : {"AttackSpeed" : 20}},
                     "Runes" : {"Slam Dance" : {"Bonus" : .3}},
@@ -440,7 +450,7 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
         classarrayname = classname.slice(0,3) + "bonus";
         
         //append title to output
-        $("#hero").after('<h2>Total from Items/Skills<a href="" title ="Includes runes in data, just not in tooltip. Activated passives are pro-rated. Turn off Paragon points and check &#39;base&#39; here to match your in-game dps. May be off due to Blizzard&#39;s incorrect API, weird passives, or pre 2.0.5 weapons." onclick="return false;"><sup>*</sup></a></h2>');
+        $("#hero").after('<h2>Total from Items/Skills<a href="" title ="Includes runes in data, just not in tooltip. Activated passives are pro-rated. Turn off Paragon points and check &#39;base&#39; here to match your in-game dps. May be off due to Blizzard&#39;s incorrect API, weird passives, or pre 2.0.5 weapons." onclick="return false;"><span class = orangestar>&nbsp;</span></a></h2>');
         $("#output").append('<div id ="outputact"></div><div id ="outputpass"></div><div id ="outputrune"></div>');
         //for each active skill
         $.each(result.skills.active, function(count, field){ //check each active skill
@@ -457,11 +467,8 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
                 $.each(window[classarrayname].Runes, function (namecheck, val){ //check the Rune names
                     if (typeof field.rune !== "undefined"){ //no rune error check
                         if(field.rune.name === namecheck){
-                            $("#outputrune").append("<a href='http://" + g_host + ".battle.net/d3/en/class/" + classname + "/active/" + field.skill.slug + "' onclick='return false;'>" + namecheck + "</a><br>");
-                            //$("#outputrune").append("<a href='http://" + g_host + ".battle.net/d3/en/class/" + classname + "/active/" + field.skill.slug + "#" + field.rune.type + "' onclick='return false;'>" + namecheck + "</a><br>");
-                            //$("#outputrune").append("<a href='http://eu.battle.net/d3/en/class/monk/active/serenity#c'>" + "serenity" +  "</a><br>");
-                            //TODO runes on hover
-                            //http://{region}.battle.net/d3/{locale}/class/{class}/active/{skill}#{runeLetter}
+                            $("#outputrune").append("<a href='http://" + g_host + ".battle.net/d3/en/class/" + classname + "/active/" + field.skill.slug + "#" + field.rune.type +"' onclick='return false;'>" + namecheck + "</a><br>");
+                            //<a href="http://us.battle.net/d3/en/class/monk/active/serenity#c">Ascension</a>
                             if (typeof val.Bonus !== "undefined")  {total.Bonus += val.Bonus;} //add to total bonus if exists
                             if (typeof val.Chance !== "undefined") {total.Chance += val.Chance;} //add to total chance if exists
                             if (typeof val.Damage !== "undefined") {total.Damage += val.Damage;} //add to total damage if exists
@@ -486,11 +493,13 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
            });
         });
 
-        //TODO if at this point, outputrune and pass and act all have no innerhtml, remove them
-
-        //TODO dpm calculatorshow main spender
-        //$("#dpm").append("Spender: " + mainskill + " - " + char.secondary.type);
-        //$("#dpm").append("<br>" + "Generator: " + genskill + " - " + char.primary.type);
+        //if at this point, outputrune and pass and act all have no innerhtml, remove them
+        var opp = $("#outputpass")[0].innerHTML;
+        var opr = $("#outputrune")[0].innerHTML;
+        var ops = $("#outputact")[0].innerHTML;
+        if (opp === "" && opr === "" && ops === ""){
+            $("#output").css("margin-top", "-40px"); //close up empty space
+        }
 
         //find attribute main type   
         primname = "";    
@@ -587,8 +596,7 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
        }
        //add blank row to table for totals
         $("#herotable").append('<tr id = "row_totals">'); //totals row
-        //TODO adding the sup below changed the position of totals.. hmm..
-        $("#row_totals").append('<td>Totals<a href="" title ="Includes base primary and crit chance and crit damage, set bonuses, and active/passive skills." onclick="return false;"><sup>*</sup></a></td>');
+        $("#row_totals").append('<td>Totals<a href="" title ="Includes base primary and crit chance and crit damage, set bonuses, and active/passive skills." onclick="return false;"><span class = orangestar>&nbsp;</span></a></td>');
         for (var i = 0; i < 8; i++) //for each of 8 cells in a row
             {
                 $("#row_totals").append("<td></td>"); //blank cell for each
@@ -626,7 +634,6 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
           function(textresult) {  
                 //TODO get all raw data, just to see what's there.
                 getAllRaw(textresult.attributesRaw, i);
-                
               
                 //for each item primary attributes
                 $.each(textresult.attributes.primary, function(j, textfield){
@@ -635,7 +642,6 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
  
                 
                 //TODO get all legendary attributes
-                
                 var bonusslot = "";
                 $.each (textresult.attributes, function(j, textfield){ //prim/sec/pass
                     if (typeof textfield["0"] !== "undefiend"){ //if at least 1
@@ -811,10 +817,10 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
                 $("#skillspecific").append('<h2 id ="skillspecifictitle"></h2>');
                 //then deciding on correct name
                 if (typeof mainskillrune !== "undefined"){
-                    $("#skillspecifictitle").append(mainskillrune + '<a href="" title ="The first two columns are just the spell damage %, the second two are spell % + elemental %" onclick="return false;"><sup>*</sup></a>');
+                    $("#skillspecifictitle").append(mainskillrune + '<a href="" title ="The first two columns are just the spell damage %, the second two are spell % + elemental %" onclick="return false;"><span class = orangestar>&nbsp;</span></a>');
                 }
                 else {
-                    $("#skillspecifictitle").append(mainskill + '<a href="" title ="The first two columns are just the spell damage %, the second two are spell % + elemental %" onclick="return false;"><sup>*</sup></a>');
+                    $("#skillspecifictitle").append(mainskill + '<a href="" title ="The first two columns are just the spell damage %, the second two are spell % + elemental %" onclick="return false;"><span class = orangestar>&nbsp;</span></a>');
                 }
 
                 //Do calculations for main skill
@@ -940,7 +946,7 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
                 
                      
                 //TODO summarize
-                //summarize(); 
+                summarize(); 
                 
                 //TODO leg bonuses - ideas? when to show in-game stat, when to add in passives, when to add in legendary bonuses
                 console.log(legbonuses);
@@ -985,7 +991,7 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
                     //X     ^ done, need to do the button
                
                //X          double-clicking same hero icon, quickly, doesn't clear! no clue how to solve that except maybe a wait function before responding again? or state variable?
-               //wait for display of icons until they've changed from default wiz, or no default at all?
+               //X          wait for display of icons until they've changed from default wiz, or no default at all?
                
                //mainskill as option - probably not bother, just do an all-skills thing
                
@@ -993,6 +999,7 @@ $.getJSON("http://"+g_host+".battle.net/api/d3/profile/"+g_name+"-"+g_code+"/her
                
                //X          Increase! - Contribute? dps with item and dps without item, find difference. 150 dps to 100 dps, (x-y)/x.
                //switch cold and elite in table?
+               //add flat damage to table!
                //not exactly a dps calculator, its a damage per cast calculator. dps is not a useful thing to know, 
                     //but dpm or dprotation would be... HARD
         
@@ -1363,7 +1370,7 @@ function paragonsuggest(totallevel){
         $("#paragon2").append("<span style='color:white; font-weight: bold'>" + addspeed + "</span> points should go into Attack Speed. ");
     }
     $("#paragon2").append("<br>Spending your points this way will give you dps as follows:"); 
-   // $("#paragon2").append("<a href='' title ='The base value in this table should be your sheet dps in-game. If not, it&#39;s Blizzard&#39;s fault with incorrect offhand damage.' onclick='return false;'><sup>*</a></sup>");
+   // $("#paragon2").append("<a href='' title ='The base value in this table should be your sheet dps in-game. If not, it&#39;s Blizzard&#39;s fault with incorrect offhand damage.' onclick='return false;'><span class = orangestar>&nbsp;</span></a>");
     generatedps("paragon2");
 }
 
@@ -1401,18 +1408,8 @@ function generatedps(location, a){ //generates the tables
     dps.Elemental = dps.Base * (1 + (total["Elementp"][char.secondary.type]/100)); //get only spender's element
     dps.EliteElemental = dps.Base * (1 + (total["Elite"]/100)) * (1 + (total["Elementp"][char.secondary.type]/100));
 
-/*
-    var given = 1067451;
-    var supposed = 1132987;
-    var diff = supposed-given; //2^16...
-    console.log(diff);
-    var perc = ((diff/given)*100)/given;
-    console.log(perc); //.0000005...
-*/
+    
 
-
-    //table, normal, elite, elemental, el/el along the top
-    //dps - sheet
     //dpcast - main spell, no attack speed
 
     //dpap - from max resource to empty.. tough calculating max resource..
@@ -1431,16 +1428,16 @@ function generatedps(location, a){ //generates the tables
     $("#table" + location).append("<tr id ='" + location + "body'>");
     //display each dps
     $.each(dps, function(name, value){
-        //get % increase over sheet dps
-        var increase = ((value/dps.Base)*100).toFixed(0);
         //shorten to 0 decimals
         value = (Math.round(value*100)/100).toFixed(0);
         //add commas
         value = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         //append to table - info
         $("#" + location + "body").append("<td>"+value+"</td>");
-
-        //$("#" + location).append(name  + " DPS: " + value + " (" + increase + "%)"); //increase percent isn't hugely useful...
+        //remember the sheet dps for later
+        if (location === "paragon2" && name === "Base"){
+            sheetdps = value;
+        }
     });
 
     $("#table" + location).append("</tr>");
@@ -1593,7 +1590,6 @@ approximate amounts available in gear slots). Ex. Increasing your Primary stat b
 function summarize(){
     $("#hero").before("<div id = 'summary'></div>"); //create new div for stuff to go in
     $("#summary").append("<h2>Summary for " + heroname + "</h2>");
-    //TODO add character's name to ^ G-name?
     
     var avgdmg = (total.Mindmg + total.Maxdmg)/2;
     var pass = total.Bonus; //bonus from passives and skills
@@ -1604,41 +1600,59 @@ function summarize(){
     
     var dps = {}; //create dps array
  
-    //TODO log final damages
-        $.each(char, function(count, value){
-            if (value.type !== 0 && typeof value.name !== "undefined"){
-                var newbase = base; 
-                newbase = newbase * (value.damage/100); //times by new damage
-                newbase = newbase * (1 + (value.skill/100)); //times by skill
-                newbase = newbase * (1 + (total["Elementp"][value.type]/100)); //times by element
-                newbase = newbase * (1 + (total["Elite"]/100)); //times by elite
-                
-                //shorten to 0 decimals
-                newbase = (Math.round(newbase*100)/100).toFixed(0);
-                //add commas
-                newbase = newbase.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-                
-                //This is correct, missing "odd" statements like the customized patch 2.0.5 element changes and meteor.
-                //console.log(value.name + " does " + newbase + " damage per second.");
-                dps[value.name] = newbase;
-            }
-        });
+    //convert damages and add skill relevant percents
+    $.each(char, function(count, value){
+        if (value.type !== 0 && typeof value.name !== "undefined"){
+            var newbase = base; 
+            newbase = newbase * (value.damage/100); //times by new damage
+            newbase = newbase * (1 + (value.skill/100)); //times by skill
+            newbase = newbase * (1 + (total["Elementp"][value.type]/100)); //times by element
+            newbase = newbase * (1 + (total["Elite"]/100)); //times by elite
+
+            //shorten to 0 decimals
+            newbase = (Math.round(newbase*100)/100).toFixed(0);
+            //add commas
+            newbase = newbase.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            //This is correct, missing "odd" statements like the customized patch 2.0.5 element changes and meteor.
+            //console.log(value.name + " does " + newbase + " damage per second.");
+            dps[value.name] = {};
+            dps[value.name].value = newbase;
+            dps[value.name].count = count;//this count is the number in the char object
+
+        }
+    });
     
     var location = "summary";
     var count = 0; //need to do manually, using name as id falls apart with spaces.
     
     //create a table
     $("#" + location).append("<table id = 'table" + location + "'>");
+    //show base sheet dps
+    $("#table" + location).append("<tr id ='sheet'>");
+    $("#sheet").append("<td>");
+    $("#sheet").find("td:eq(0)").append("Character Sheet Dps");
+    $("#sheet").find("td:eq(0)").append("</td>");
+    $("#sheet").append("<td>"+ sheetdps + "</td>");
+    $("#table" + location).append("</tr>");
     
+        //show name and damage of each skill
         $.each(dps, function(name, value){
             $("#table" + location).append("<tr id ='skill" + count + "'>");
-            
             //conversion required for name to slug, lower case and - not spaces.
             var slug = name.toLowerCase();
             slug = slug.replace(" ", "-");
-            $("#skill" + count).append("<td><a href='http://" + g_host + ".battle.net/d3/en/class/" + classname + "/active/" + slug + "' onclick='return false;'>" + name + "</a><td>");
-                        
-            $("#skill" + count).append("<td>"+value+"</td>");
+            var posi = value.count;
+            $("#skill" + count).append("<td>");
+            $("#skill" + count).find("td:eq(0)").append("<a href='http://" + g_host + ".battle.net/d3/en/class/" + classname + "/active/" + slug + "' onclick='return false;'>" + name + "</a>");
+            
+            if(char[posi].runeletter !== 0){ //only show dash and rune if there is a rune
+                $("#skill" + count).find("td:eq(0)").append(" - ");
+                $("#skill" + count).find("td:eq(0)").append("<a href='http://" + g_host + ".battle.net/d3/en/class/" + classname + "/active/" + slug + "#" + char[posi].runeletter + "' onclick='return false;'>" + char[posi].runename + "</a>");
+            }
+            $("#skill" + count).find("td:eq(0)").append("</td>");
+            
+            $("#skill" + count).append("<td>"+value.value+"</td>");
 
             $("#table" + location).append("</tr>");
             count++;
@@ -1646,7 +1660,192 @@ function summarize(){
         });
     //close table    
     $("#" + location).append("</table>"); //close table
-}
+    
+}//eo summarize
+
+function fixrune (count){ //count through char[count]..
+    //console.log(char[count].damage);
+    //console.log(char);
+    
+    if (typeof char[count].runename !== "undefined"){
+        if (char[count].runename === "Meteor Shower"){
+            char[count].damage = 228 * 7; //228% times 7 meteors
+        }
+        if (char[count].runename === "Conflagrate"){
+            //char[count].damage = 55 ; //55 added burn damage..?
+        }
+        
+        
+        //BAR
+            if (char[count].runename === "Sidearm"){ 
+                char[count].type = "Cold"; 
+            }
+            if (char[count].runename === "Crushing Advance"){ 
+                char[count].type = "Cold"; 
+            }
+            if (char[count].runename === "Best Served Cold"){ 
+                char[count].type = "Cold"; 
+            }
+            if (char[count].runename === "Hurricane"){ 
+                char[count].type = "Cold"; 
+            }
+            if (char[count].runename === "Arreat's Wall"){ 
+                char[count].type = "Fire"; 
+            }
+            //CRU
+            /*Akarat's Champion is all kinds of messed up*/
+            if (char[count].runename === "Divine Aegis"){ 
+                char[count].type = "Physical"; 
+            }
+            if (char[count].runename === "Annihilate"){ 
+                char[count].type = "Fire"; 
+            }
+            if (char[count].runename === "Mine Field"){ 
+                char[count].type = "Fire"; 
+            
+            }if (char[count].runename === "Targeted"){ 
+                char[count].type = "Holy"; 
+            }
+            if (char[count].runename === "Reciprocate"){ 
+                char[count].type = "Fire"; 
+            }
+            if (char[count].runename === "Shattering Explosion"){ 
+                char[count].type = "Physical"; 
+            }
+            if (char[count].runename === "Flurry"){ 
+                char[count].type = "Holy"; 
+            }
+            if (char[count].runename === "Rapid Descent"){ 
+                char[count].type = "Lightning"; 
+            }
+            if (char[count].runename === "Heaven's Tempest"){ 
+                char[count].type = "Fire"; 
+            }
+            if (char[count].runename === "Retribution"){ 
+                char[count].type = "Holy"; 
+            }
+            if (char[count].runename === "Thou Shalt Not Pass"){ 
+                char[count].type = "Lightning"; 
+            }
+            if (char[count].runename === "Hammer of Pursuit"){ 
+                char[count].type = "Physical"; 
+            }
+            if (char[count].runename === "Sword of Justice"){ 
+                char[count].type = "Physical"; 
+            }
+            if (char[count].runename === "Fury"){ 
+                char[count].type = "Lightning"; 
+            }
+            if (char[count].runename === "Retaliate"){ 
+                char[count].type = "Holy"; 
+            }
+            if (char[count].runename === "Crumble"){ 
+                char[count].type = "Fire"; 
+            }
+            if (char[count].runename === "One on One"){ 
+                char[count].type = "Lightning"; 
+            }
+            if (char[count].runename === "Pound"){ 
+                char[count].type = "Physical"; 
+            }
+            if (char[count].runename === "Shield Cross"){ 
+                char[count].type = "Physical"; 
+            }
+            if (char[count].runename === "Shared Fate"){ 
+                char[count].type = "Lightning"; 
+            }
+            if (char[count].runename === "Draw and Quarter"){ 
+                char[count].type = "Holy"; 
+            }
+            if (char[count].runename === "Gathering Sweep"){ 
+                char[count].type = "Holy"; 
+            }
+            if (char[count].runename === "Shattering Throw"){
+                char[count].type = "Holy";
+            }
+            //DH
+            if (char[count].runename === "Devouring Arrow"){ 
+                char[count].type = "Cold"; 
+            }
+            //Monk
+            if (char[count].runename === "Rising Tide"){ 
+                char[count].type = "Holy"; 
+            }
+            if (char[count].runename === "Keen Eye"){ 
+                char[count].type = "Fire"; 
+            }
+            if (char[count].runename === "Strike from Beyond"){ 
+                char[count].type = "Cold"; 
+            }
+            if (char[count].runename === "Bounding Light"){ 
+                char[count].type = "Holy"; 
+            }
+            if (char[count].runename === "Quickening"){ 
+                char[count].type = "Physical"; 
+            }
+            if (char[count].runename === "Inner Storm"){ 
+                char[count].type = "Holy"; 
+            }
+            if (char[count].runename === "Explosive Light"){ 
+                char[count].type = "Fire"; 
+            } //following rune got a name change too, hmm..
+            if (char[count].runename === "Blinding Light" || char[count].runename === "Numbing Light"){ 
+                char[count].type = "Cold"; 
+            }
+            if (char[count].runename === "Wall of Light"){ 
+                char[count].type = "Physical"; 
+            }
+            if (char[count].runename === "Blazing Fists"){ 
+                char[count].type = "Fire"; 
+            }
+            if (char[count].runename === "Hands of Lightning"){ 
+                char[count].type = "Lightning"; 
+            }
+            if (char[count].runename === "Spirited Salvo"){ 
+                char[count].type = "Holy"; 
+            }
+            //WD
+            if (char[count].runename === "Leaping Spiders"){ 
+                char[count].type = "Poison"; 
+            }
+            if (char[count].runename === "Medusa Spiders"){ 
+                char[count].type = "Cold"; 
+            }
+            if (char[count].runename === "Humongoid"){ 
+                char[count].type = "Cold"; 
+            }
+            if (char[count].runename === "Bruiser"){ 
+                char[count].type = "Fire"; 
+            }
+            if (char[count].runename === "Toad of Hugeness"){ 
+                char[count].type = "Poison"; 
+            }
+            if (char[count].runename === "Bogadile"){ 
+                char[count].type = "Physical"; 
+            }
+            if (char[count].runename === "Unrelenting Grip"){ 
+                char[count].type = "Cold"; 
+            }
+            //WIZ
+            if (char[count].runename === "Arcane Destruction" || char[count].runename === "Combustion"){ 
+                char[count].type = "Fire"; 
+            }
+            if (char[count].runename === "Pure Power"){ 
+                char[count].type = "Lightning"; 
+            }
+            if (char[count].runename === "Slow Time"){ 
+                char[count].type = "Cold"; 
+            }
+        
+        
+        
+        
+        
+        
+    }
+    
+    
+}//eo function fixrune
 
 
 
@@ -1658,7 +1857,7 @@ function clearoutput(special){
     //clear all output
     $("#clearable").html('');
     //and clear heroes header
-    $("#h2heroes").remove();
+    //$("#h2heroes").remove();
     //then re-add top-level divs
     $("#clearable").append('<div id = "hero"></div>');
     $("#clearable").append('<div id = "output"></div>');
